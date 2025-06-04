@@ -158,7 +158,6 @@ async function main() {
     console.log('DeleteSession:', deleteSessionResp[0]);
     
     // 22. Delete User
-    // Need to login again to delete user
     console.log('\n22. Testing Delete User');
     const relogin = await client.loginUserAsync({ email: userResp[0].user.email, password: 'password123' });
     const delToken = relogin[0].token;
