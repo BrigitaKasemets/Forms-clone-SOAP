@@ -1,0 +1,612 @@
+# Forms Clone API - REST Endpointide Kaardistus
+
+## Autentimine
+Kõik endpointid (välja arvatud registreerimine ja sisselogimine) nõuavad JWT Bearer autentimist:
+```
+Authorization: Bearer <jwt_token>
+```
+
+---
+
+## 1. SESSIONS (Autentimine)
+
+### POST /sessions
+**Kirjeldus:** Loo uus seanss (sisselogimine)
+**Autentimine:** Ei nõua
+
+**Sisend:**
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+```
+
+**Väljund (201):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "userId": "1"
+}
+```
+
+**Veakoodid:**
+- 400: Puuduvad nõutud väljad
+- 401: Vigased sisselogimisandmed
+- 500: Serveri viga
+
+### DELETE /sessions
+**Kirjeldus:** Lõpeta praegune seanss (väljalogimine)
+**Autentimine:** Nõuab Bearer token
+
+**Sisend:** Ei nõua
+**Väljund (200):** Tühi vastus
+
+**Veakoodid:**
+- 401: Pole autentitud
+- 500: Serveri viga
+
+---
+
+## 2. USERS (Kasutajad)
+
+### POST /users
+**Kirjeldus:** Loo uus kasutaja (registreerimine)
+**Autentimine:** Ei nõua
+
+**Sisend:**
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePass123!",
+  "name": "Kasutaja Nimi"
+}
+```
+
+**Väljund (201):**
+```json
+{
+  "id": "2",
+  "email": "user@example.com",
+  "name": "Kasutaja Nimi",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+**Veakoodid:**
+- 400: Valideerimise viga (parooli nõuded)
+- 409: Email juba kasutusel
+- 500: Serveri viga
+
+### GET /users
+**Kirjeldus:** Kuva kõik kasutajad
+**Autentimine:** Nõuab Bearer token
+
+**Sisend:** Ei nõua
+**Väljund (200):**
+```json
+[
+  {
+    "id": "1",
+    "email": "admin@example.com",
+    "name": "Admin User",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]
+```
+
+### GET /users/{userId}
+**Kirjeldus:** Kuva konkreetse kasutaja üksikasjad
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `userId` (string): Kasutaja ID
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "email": "admin@example.com",
+  "name": "Admin User",
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
+```
+
+**Veakoodid:**
+- 404: Kasutajat ei leitud
+- 401: Pole autentitud
+
+### PATCH /users/{userId}
+**Kirjeldus:** Uuenda kasutaja andmeid
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `userId` (string): Kasutaja ID
+
+**Sisend (kõik väljad valikulised):**
+```json
+{
+  "email": "uus@example.com",
+  "name": "Uus Nimi",
+  "password": "UusParool123!"
+}
+```
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "email": "uus@example.com",
+  "name": "Uus Nimi",
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T11:00:00Z",
+  "passwordUpdated": true
+}
+```
+
+### DELETE /users/{userId}
+**Kirjeldus:** Kustuta kasutaja
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `userId` (string): Kasutaja ID või "me" (enda kustutamiseks)
+
+**Väljund (204):** Tühi vastus
+
+---
+
+## 3. FORMS (Vormid)
+
+### POST /forms
+**Kirjeldus:** Loo uus vorm
+**Autentimine:** Nõuab Bearer token
+
+**Sisend:**
+```json
+{
+  "title": "Tagasiside vorm",
+  "description": "Palun andke tagasisidet meie teenuse kohta"
+}
+```
+
+**Väljund (201):**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "title": "Tagasiside vorm",
+  "description": "Palun andke tagasisidet meie teenuse kohta",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### GET /forms
+**Kirjeldus:** Kuva kõik vormid
+**Autentimine:** Nõuab Bearer token
+
+**Väljund (200):**
+```json
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "title": "Tagasiside vorm",
+    "description": "Palun andke tagasisidet meie teenuse kohta",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z"
+  }
+]
+```
+
+### GET /forms/{formId}
+**Kirjeldus:** Kuva konkreetse vormi üksikasjad
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Väljund (200):**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "title": "Tagasiside vorm",
+  "description": "Palun andke tagasisidet meie teenuse kohta",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### PATCH /forms/{formId}
+**Kirjeldus:** Uuenda vormi andmeid
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Sisend (kõik väljad valikulised):**
+```json
+{
+  "title": "Uuendatud pealkiri",
+  "description": "Uuendatud kirjeldus"
+}
+```
+
+**Väljund (200):**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "title": "Uuendatud pealkiri",
+  "description": "Uuendatud kirjeldus",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T11:30:00Z"
+}
+```
+
+### DELETE /forms/{formId}
+**Kirjeldus:** Kustuta vorm
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Väljund (204):** Tühi vastus
+
+---
+
+## 4. QUESTIONS (Küsimused)
+
+### POST /forms/{formId}/questions
+**Kirjeldus:** Loo uus küsimus vormile
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Sisend:**
+```json
+{
+  "text": "Kui rahul olete meie teenusega?",
+  "type": "multiplechoice",
+  "required": true,
+  "options": ["Väga rahul", "Rahul", "Ei ole rahul", "Üldse ei ole rahul"]
+}
+```
+
+**Küsimuste tüübid:**
+- `shorttext` - Lühike tekst
+- `paragraph` - Pikk tekst
+- `multiplechoice` - Valikuvastused (üks valik)
+- `checkbox` - Märkeruudud (mitu valikut)
+- `dropdown` - Rippmenüü
+
+**Väljund (201):**
+```json
+{
+  "id": "1",
+  "text": "Kui rahul olete meie teenusega?",
+  "type": "multiplechoice",
+  "required": true,
+  "options": ["Väga rahul", "Rahul", "Ei ole rahul", "Üldse ei ole rahul"],
+  "createdAt": "2024-01-15T10:45:00Z",
+  "updatedAt": "2024-01-15T10:45:00Z"
+}
+```
+
+### GET /forms/{formId}/questions
+**Kirjeldus:** Kuva kõik vormi küsimused
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Väljund (200):**
+```json
+[
+  {
+    "id": "1",
+    "text": "Kui rahul olete meie teenusega?",
+    "type": "multiplechoice",
+    "required": true,
+    "options": ["Väga rahul", "Rahul", "Ei ole rahul", "Üldse ei ole rahul"],
+    "createdAt": "2024-01-15T10:45:00Z",
+    "updatedAt": "2024-01-15T10:45:00Z"
+  }
+]
+```
+
+### GET /forms/{formId}/questions/{questionId}
+**Kirjeldus:** Kuva konkreetse küsimuse üksikasjad
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `questionId` (string): Küsimuse ID
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "text": "Kui rahul olete meie teenusega?",
+  "type": "multiplechoice",
+  "required": true,
+  "options": ["Väga rahul", "Rahul", "Ei ole rahul", "Üldse ei ole rahul"],
+  "createdAt": "2024-01-15T10:45:00Z",
+  "updatedAt": "2024-01-15T10:45:00Z"
+}
+```
+
+### PATCH /forms/{formId}/questions/{questionId}
+**Kirjeldus:** Uuenda küsimust
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `questionId` (string): Küsimuse ID
+
+**Sisend (kõik väljad valikulised):**
+```json
+{
+  "text": "Uuendatud küsimus?",
+  "type": "dropdown",
+  "required": false,
+  "options": ["Valik 1", "Valik 2"]
+}
+```
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "text": "Uuendatud küsimus?",
+  "type": "dropdown",
+  "required": false,
+  "options": ["Valik 1", "Valik 2"],
+  "createdAt": "2024-01-15T10:45:00Z",
+  "updatedAt": "2024-01-15T11:45:00Z"
+}
+```
+
+### DELETE /forms/{formId}/questions/{questionId}
+**Kirjeldus:** Kustuta küsimus
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `questionId` (string): Küsimuse ID
+
+**Väljund (204):** Tühi vastus
+
+---
+
+## 5. RESPONSES (Vastused)
+
+### POST /forms/{formId}/responses
+**Kirjeldus:** Loo vastus vormile
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Sisend:**
+```json
+{
+  "answers": [
+    {
+      "questionId": "1",
+      "answer": "Väga rahul"
+    },
+    {
+      "questionId": "2", 
+      "answer": "Suurepärane teenindus!"
+    }
+  ],
+  "respondentName": "Mari Maasikas",
+  "respondentEmail": "mari@example.com"
+}
+```
+
+**Väljund (201):**
+```json
+{
+  "id": "1",
+  "formId": "1",
+  "respondentName": "Mari Maasikas",
+  "respondentEmail": "mari@example.com",
+  "answers": [
+    {
+      "questionId": "1",
+      "answer": "Väga rahul"
+    },
+    {
+      "questionId": "2",
+      "answer": "Suurepärane teenindus!"
+    }
+  ],
+  "createdAt": "2024-01-15T12:00:00Z",
+  "updatedAt": "2024-01-15T12:00:00Z"
+}
+```
+
+### GET /forms/{formId}/responses
+**Kirjeldus:** Kuva kõik vormi vastused
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+
+**Väljund (200):**
+```json
+[
+  {
+    "id": "1",
+    "formId": "1",
+    "respondentName": "Mari Maasikas",
+    "respondentEmail": "mari@example.com",
+    "answers": [
+      {
+        "questionId": "1",
+        "answer": "Väga rahul"
+      }
+    ],
+    "createdAt": "2024-01-15T12:00:00Z",
+    "updatedAt": "2024-01-15T12:00:00Z"
+  }
+]
+```
+
+### GET /forms/{formId}/responses/{responseId}
+**Kirjeldus:** Kuva konkreetse vastuse üksikasjad
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `responseId` (string): Vastuse ID
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "formId": "1",
+  "respondentName": "Mari Maasikas",
+  "respondentEmail": "mari@example.com",
+  "answers": [
+    {
+      "questionId": "1",
+      "answer": "Väga rahul"
+    }
+  ],
+  "createdAt": "2024-01-15T12:00:00Z",
+  "updatedAt": "2024-01-15T12:00:00Z"
+}
+```
+
+### PATCH /forms/{formId}/responses/{responseId}
+**Kirjeldus:** Uuenda vastust
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `responseId` (string): Vastuse ID
+
+**Sisend (kõik väljad valikulised):**
+```json
+{
+  "answers": [
+    {
+      "questionId": "1",
+      "answer": "Rahul"
+    }
+  ],
+  "respondentName": "Mari Uus-Nimi",
+  "respondentEmail": "mari.uus@example.com"
+}
+```
+
+**Väljund (200):**
+```json
+{
+  "id": "1",
+  "formId": "1",
+  "respondentName": "Mari Uus-Nimi",
+  "respondentEmail": "mari.uus@example.com",
+  "answers": [
+    {
+      "questionId": "1",
+      "answer": "Rahul"
+    }
+  ],
+  "createdAt": "2024-01-15T12:00:00Z",
+  "updatedAt": "2024-01-15T13:00:00Z"
+}
+```
+
+### DELETE /forms/{formId}/responses/{responseId}
+**Kirjeldus:** Kustuta vastus
+**Autentimine:** Nõuab Bearer token
+
+**URL parameetrid:**
+- `formId` (string): Vormi ID
+- `responseId` (string): Vastuse ID
+
+**Väljund (204):** Tühi vastus
+
+---
+
+## Üldised Veakoodid
+
+Kõik endpointid võivad tagastada järgmised veakoodid:
+
+- **400 Bad Request:** Vigased sisendparameetrid
+```json
+{
+  "code": 400,
+  "message": "Validation failed",
+  "details": [
+    {
+      "field": "email",
+      "message": "Email is required"
+    }
+  ]
+}
+```
+
+- **401 Unauthorized:** Pole autentitud või token on aegunud
+```json
+{
+  "error": "Invalid or expired token"
+}
+```
+
+- **404 Not Found:** Ressurssi ei leitud
+```json
+{
+  "code": 404,
+  "message": "Form not found",
+  "details": [
+    {
+      "message": "Form with ID 123 does not exist"
+    }
+  ]
+}
+```
+
+- **500 Internal Server Error:** Serveri sisemine viga
+```json
+{
+  "code": 500,
+  "message": "Internal server error",
+  "details": [
+    {
+      "message": "Database connection failed"
+    }
+  ]
+}
+```
+
+---
+
+## Valideerimisreeglid
+
+### Parooli Nõuded:
+- Vähemalt 8 tähemärki pikk
+- Peab sisaldama vähemalt 3 järgnevast 4 kategooriast:
+  - Suurtähed (A-Z)
+  - Väiketähed (a-z) 
+  - Numbrid (0-9)
+  - Erimärgid (!@#$%^&*)
+
+### Küsimuste Tüübid:
+- `shorttext`, `paragraph` - ei vaja options välja
+- `multiplechoice`, `checkbox`, `dropdown` - nõuavad options massiivi
+
+### Nõutud Väljad:
+- **Forms:** title (nõutud), description (valikuline)
+- **Questions:** text, type (nõutud), options (vajalik valikutüüpide puhul)
+- **Responses:** answers massiiv (nõutud), respondentName ja respondentEmail (valikulised)
+- **Users:** email, password, name (kõik nõutud registreerimisel)

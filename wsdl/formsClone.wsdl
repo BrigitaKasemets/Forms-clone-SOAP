@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+  name="FormsCloneService"
+  targetNamespace="http://formsclone.service/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://formsclone.service/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Type Definitions -->
+  <wsdl:types>
+    <xs:schema targetNamespace="http://formsclone.service/">
+      
+      <!-- Common Types -->
+      <xs:complexType name="BaseResponse">
+        <xs:sequence>
+          <xs:element name="success" type="xs:boolean"/>
+          <xs:element name="message" type="xs:string" minOccurs="0"/>
+          <xs:element name="errorCode" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- User Types -->
+      <xs:complexType name="User">
+        <xs:sequence>
+          <xs:element name="id" type="xs:string"/>
+          <xs:element name="email" type="xs:string"/>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="role" type="xs:string"/>
+          <xs:element name="createdAt" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Form Types -->
+      <xs:complexType name="Form">
+        <xs:sequence>
+          <xs:element name="id" type="xs:string"/>
+          <xs:element name="title" type="xs:string"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="isPublished" type="xs:boolean"/>
+          <xs:element name="createdAt" type="xs:dateTime"/>
+          <xs:element name="updatedAt" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Question Types -->
+      <xs:complexType name="Question">
+        <xs:sequence>
+          <xs:element name="id" type="xs:string"/>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="title" type="xs:string"/>
+          <xs:element name="type" type="xs:string"/>
+          <xs:element name="required" type="xs:boolean"/>
+          <xs:element name="options" type="xs:string" minOccurs="0"/>
+          <xs:element name="order" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Response Types -->
+      <xs:complexType name="Response">
+        <xs:sequence>
+          <xs:element name="id" type="xs:string"/>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="userId" type="xs:string" minOccurs="0"/>
+          <xs:element name="answers" type="tns:Answer" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="submittedAt" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="Answer">
+        <xs:sequence>
+          <xs:element name="questionId" type="xs:string"/>
+          <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Authentication Types -->
+      <xs:complexType name="LoginRequest">
+        <xs:sequence>
+          <xs:element name="email" type="xs:string"/>
+          <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="LoginResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="token" type="xs:string"/>
+              <xs:element name="userId" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <!-- User Request/Response Types -->
+      <xs:complexType name="CreateUserRequest">
+        <xs:sequence>
+          <xs:element name="email" type="xs:string"/>
+          <xs:element name="password" type="xs:string"/>
+          <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="CreateUserResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="user" type="tns:User"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:complexType name="GetUserRequest">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="GetUserResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="user" type="tns:User"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:complexType name="UpdateUserRequest">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="password" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="DeleteUserRequest">
+        <xs:sequence>
+          <xs:element name="userId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!-- Form Request/Response Types -->
+      <xs:complexType name="CreateFormRequest">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="title" type="xs:string"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="CreateFormResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="form" type="tns:Form"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:complexType name="GetFormRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="GetFormResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="form" type="tns:Form"/>
+              <xs:element name="questions" type="tns:Question" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:complexType name="ListFormsRequest">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="ListFormsResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="forms" type="tns:Form" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <!-- Question Request/Response Types -->
+      <xs:complexType name="AddQuestionRequest">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="title" type="xs:string"/>
+          <xs:element name="type" type="xs:string"/>
+          <xs:element name="required" type="xs:boolean"/>
+          <xs:element name="options" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="AddQuestionResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="question" type="tns:Question"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <!-- Response Request/Response Types -->
+      <xs:complexType name="SubmitResponseRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string" minOccurs="0"/>
+          <xs:element name="answers" type="tns:Answer" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="SubmitResponseResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="responseId" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+
+      <xs:complexType name="ListResponsesRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+
+      <xs:complexType name="ListResponsesResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="responses" type="tns:Response" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+
+  <!-- Messages -->
+  <!-- Authentication Messages -->
+  <wsdl:message name="loginUserRequest">
+    <wsdl:part name="parameters" element="tns:LoginRequest"/>
+  </wsdl:message>
+  <wsdl:message name="loginUserResponse">
+    <wsdl:part name="parameters" element="tns:LoginResponse"/>
+  </wsdl:message>
+  <wsdl:message name="logoutUserRequest">
+    <wsdl:part name="token" element="xs:string"/>
+  </wsdl:message>
+  <wsdl:message name="logoutUserResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+
+  <!-- User Messages -->
+  <wsdl:message name="createUserRequest">
+    <wsdl:part name="parameters" element="tns:CreateUserRequest"/>
+  </wsdl:message>
+  <wsdl:message name="createUserResponse">
+    <wsdl:part name="parameters" element="tns:CreateUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getUserRequest">
+    <wsdl:part name="parameters" element="tns:GetUserRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getUserResponse">
+    <wsdl:part name="parameters" element="tns:GetUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="updateUserRequest">
+    <wsdl:part name="parameters" element="tns:UpdateUserRequest"/>
+  </wsdl:message>
+  <wsdl:message name="updateUserResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteUserRequest">
+    <wsdl:part name="parameters" element="tns:DeleteUserRequest"/>
+  </wsdl:message>
+  <wsdl:message name="deleteUserResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+
+  <!-- Form Messages -->
+  <wsdl:message name="createFormRequest">
+    <wsdl:part name="parameters" element="tns:CreateFormRequest"/>
+  </wsdl:message>
+  <wsdl:message name="createFormResponse">
+    <wsdl:part name="parameters" element="tns:CreateFormResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getFormRequest">
+    <wsdl:part name="parameters" element="tns:GetFormRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getFormResponse">
+    <wsdl:part name="parameters" element="tns:GetFormResponse"/>
+  </wsdl:message>
+  <wsdl:message name="listFormsRequest">
+    <wsdl:part name="parameters" element="tns:ListFormsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="listFormsResponse">
+    <wsdl:part name="parameters" element="tns:ListFormsResponse"/>
+  </wsdl:message>
+
+  <!-- Question Messages -->
+  <wsdl:message name="addQuestionRequest">
+    <wsdl:part name="parameters" element="tns:AddQuestionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="addQuestionResponse">
+    <wsdl:part name="parameters" element="tns:AddQuestionResponse"/>
+  </wsdl:message>
+
+  <!-- Response Messages -->
+  <wsdl:message name="submitResponseRequest">
+    <wsdl:part name="parameters" element="tns:SubmitResponseRequest"/>
+  </wsdl:message>
+  <wsdl:message name="submitResponseResponse">
+    <wsdl:part name="parameters" element="tns:SubmitResponseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="listResponsesRequest">
+    <wsdl:part name="parameters" element="tns:ListResponsesRequest"/>
+  </wsdl:message>
+  <wsdl:message name="listResponsesResponse">
+    <wsdl:part name="parameters" element="tns:ListResponsesResponse"/>
+  </wsdl:message>
+
+  <!-- Port Types -->
+  <wsdl:portType name="FormsClonePortType">
+    <!-- Authentication Operations -->
+    <wsdl:operation name="loginUser">
+      <wsdl:input message="tns:loginUserRequest"/>
+      <wsdl:output message="tns:loginUserResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="logoutUser">
+      <wsdl:input message="tns:logoutUserRequest"/>
+      <wsdl:output message="tns:logoutUserResponse"/>
+    </wsdl:operation>
+
+    <!-- User Operations -->
+    <wsdl:operation name="createUser">
+      <wsdl:input message="tns:createUserRequest"/>
+      <wsdl:output message="tns:createUserResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getUser">
+      <wsdl:input message="tns:getUserRequest"/>
+      <wsdl:output message="tns:getUserResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateUser">
+      <wsdl:input message="tns:updateUserRequest"/>
+      <wsdl:output message="tns:updateUserResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteUser">
+      <wsdl:input message="tns:deleteUserRequest"/>
+      <wsdl:output message="tns:deleteUserResponse"/>
+    </wsdl:operation>
+
+    <!-- Form Operations -->
+    <wsdl:operation name="createForm">
+      <wsdl:input message="tns:createFormRequest"/>
+      <wsdl:output message="tns:createFormResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getForm">
+      <wsdl:input message="tns:getFormRequest"/>
+      <wsdl:output message="tns:getFormResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="listForms">
+      <wsdl:input message="tns:listFormsRequest"/>
+      <wsdl:output message="tns:listFormsResponse"/>
+    </wsdl:operation>
+
+    <!-- Question Operations -->
+    <wsdl:operation name="addQuestion">
+      <wsdl:input message="tns:addQuestionRequest"/>
+      <wsdl:output message="tns:addQuestionResponse"/>
+    </wsdl:operation>
+
+    <!-- Response Operations -->
+    <wsdl:operation name="submitResponse">
+      <wsdl:input message="tns:submitResponseRequest"/>
+      <wsdl:output message="tns:submitResponseResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="listResponses">
+      <wsdl:input message="tns:listResponsesRequest"/>
+      <wsdl:output message="tns:listResponsesResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <!-- Bindings -->
+  <wsdl:binding name="FormsCloneBinding" type="tns:FormsClonePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <!-- Authentication Bindings -->
+    <wsdl:operation name="loginUser">
+      <soap:operation soapAction="http://formsclone.service/loginUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="logoutUser">
+      <soap:operation soapAction="http://formsclone.service/logoutUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <!-- User Bindings -->
+    <wsdl:operation name="createUser">
+      <soap:operation soapAction="http://formsclone.service/createUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUser">
+      <soap:operation soapAction="http://formsclone.service/getUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUser">
+      <soap:operation soapAction="http://formsclone.service/updateUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteUser">
+      <soap:operation soapAction="http://formsclone.service/deleteUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <!-- Form Bindings -->
+    <wsdl:operation name="createForm">
+      <soap:operation soapAction="http://formsclone.service/createForm"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getForm">
+      <soap:operation soapAction="http://formsclone.service/getForm"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listForms">
+      <soap:operation soapAction="http://formsclone.service/listForms"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <!-- Question Bindings -->
+    <wsdl:operation name="addQuestion">
+      <soap:operation soapAction="http://formsclone.service/addQuestion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <!-- Response Bindings -->
+    <wsdl:operation name="submitResponse">
+      <soap:operation soapAction="http://formsclone.service/submitResponse"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listResponses">
+      <soap:operation soapAction="http://formsclone.service/listResponses"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <!-- Service -->
+  <wsdl:service name="FormsCloneService">
+    <wsdl:port name="FormsClonePort" binding="tns:FormsCloneBinding">
+      <soap:address location="http://localhost:3001/soap/formsclone"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
