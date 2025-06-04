@@ -199,24 +199,6 @@ Test kontrollib:
 - **Vastuste Formaat:** XML ja JSON annavad ekvivalentseid tulemusi
 - **Veakäsitlus:** Mõlemad API-d käsitlevad vigu järjepidevalt
 
-### Testimise järjekord
-Soovitatav testimise järjekord:
-
-1. **Kõigepealt** - API võrdlustest:
-```fish
-node tests/compare_apis.js
-```
-
-2. **Seejärel** - SOAP kliendi demonstratsioon:
-```fish
-node client/example/client.js
-```
-
-3. **Valikuliselt** - täielik skript koos sõltuvuste paigaldamisega:
-```fish
-./tests/run_tests.sh
-```
-
 ### Probleemide lahendamine
 
 **Kui serverid ei tööta:**
@@ -238,20 +220,3 @@ cd scripts; and ./run.sh
 - Node.js v14+ on vajalik
 - Mõlemad andmebaasid (SQLite) peavad olema kirjutatavad
 - Pordid 3000 ja 3001 peavad olema vabad
-
-## API dokumentatsioon
-SOAP API dokumentatsioon on saadaval WSDL failina: `wsdl/formsClone.wsdl`
-
-### WSDL üksikasjad
-WSDL fail (`wsdl/formsClone.wsdl`) defineerib:
-- Kõik andmetüübid kasutades XML Schema-t
-- Operatsioonid, mis vastavad REST API endpointidele
-- SOAP sidumine kõikide operatsioonide jaoks
-- Teenuse lõpp-punkti üksikasjad
-
-## Vigade käsitlemine
-SOAP API kasutab standardseid SOAP Fault sõnumeid veaolukordade jaoks, sealhulgas:
-- Kliendi vead (400-taseme HTTP ekvivalendid)
-- Serveri vead (500-taseme HTTP ekvivalendid)
-- Autentimise/autoriseerimise tõrked
-

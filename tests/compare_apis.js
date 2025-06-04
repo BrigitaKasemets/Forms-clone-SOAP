@@ -124,7 +124,7 @@ async function runTests() {
         log('Testing server connections...');
         
         try {
-            await axios.head(WSDL);
+            await axios.get(WSDL, { timeout: 5000 });
             log('SOAP server is running.');
         } catch (error) {
             log('Error: SOAP server is not running or not accessible.');
@@ -133,7 +133,7 @@ async function runTests() {
         }
         
         try {
-            await axios.head(`${REST_ENDPOINT}/health`);
+            await axios.get(`${REST_ENDPOINT}/health`, { timeout: 5000 });
             log('REST server is running.');
         } catch (error) {
             log('Error: REST server is not running or not accessible.');
