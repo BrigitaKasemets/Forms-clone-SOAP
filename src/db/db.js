@@ -1,8 +1,3 @@
-/**
- * Database connection module for Forms-Clone SOAP API
- * Provides a reusable database connection
- */
-
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');

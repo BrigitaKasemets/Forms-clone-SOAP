@@ -12,6 +12,7 @@
     <xs:schema targetNamespace="http://formsclone.service/">
       
       <!-- Common Types -->
+      <xs:element name="BaseResponse" type="tns:BaseResponse"/>
       <xs:complexType name="BaseResponse">
         <xs:sequence>
           <xs:element name="success" type="xs:boolean"/>
@@ -21,6 +22,7 @@
       </xs:complexType>
 
       <!-- User Types -->
+      <xs:element name="User" type="tns:User"/>
       <xs:complexType name="User">
         <xs:sequence>
           <xs:element name="id" type="xs:string"/>
@@ -32,6 +34,7 @@
       </xs:complexType>
 
       <!-- Form Types -->
+      <xs:element name="Form" type="tns:Form"/>
       <xs:complexType name="Form">
         <xs:sequence>
           <xs:element name="id" type="xs:string"/>
@@ -45,19 +48,23 @@
       </xs:complexType>
 
       <!-- Question Types -->
+      <xs:element name="Question" type="tns:Question"/>
       <xs:complexType name="Question">
         <xs:sequence>
           <xs:element name="id" type="xs:string"/>
           <xs:element name="formId" type="xs:string"/>
-          <xs:element name="title" type="xs:string"/>
+          <xs:element name="text" type="xs:string"/>
           <xs:element name="type" type="xs:string"/>
           <xs:element name="required" type="xs:boolean"/>
           <xs:element name="options" type="xs:string" minOccurs="0"/>
           <xs:element name="order" type="xs:int"/>
+          <xs:element name="createdAt" type="xs:dateTime"/>
+          <xs:element name="updatedAt" type="xs:dateTime"/>
         </xs:sequence>
       </xs:complexType>
 
       <!-- Response Types -->
+      <xs:element name="Response" type="tns:Response"/>
       <xs:complexType name="Response">
         <xs:sequence>
           <xs:element name="id" type="xs:string"/>
@@ -68,6 +75,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="Answer" type="tns:Answer"/>
       <xs:complexType name="Answer">
         <xs:sequence>
           <xs:element name="questionId" type="xs:string"/>
@@ -76,6 +84,7 @@
       </xs:complexType>
 
       <!-- Authentication Types -->
+      <xs:element name="LoginRequest" type="tns:LoginRequest"/>
       <xs:complexType name="LoginRequest">
         <xs:sequence>
           <xs:element name="email" type="xs:string"/>
@@ -83,6 +92,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="LoginResponse" type="tns:LoginResponse"/>
       <xs:complexType name="LoginResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -93,8 +103,16 @@
           </xs:extension>
         </xs:complexContent>
       </xs:complexType>
+      
+      <xs:element name="LogoutRequest" type="tns:LogoutRequest"/>
+      <xs:complexType name="LogoutRequest">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
 
       <!-- User Request/Response Types -->
+      <xs:element name="CreateUserRequest" type="tns:CreateUserRequest"/>
       <xs:complexType name="CreateUserRequest">
         <xs:sequence>
           <xs:element name="email" type="xs:string"/>
@@ -103,6 +121,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="CreateUserResponse" type="tns:CreateUserResponse"/>
       <xs:complexType name="CreateUserResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -113,6 +132,7 @@
         </xs:complexContent>
       </xs:complexType>
 
+      <xs:element name="GetUserRequest" type="tns:GetUserRequest"/>
       <xs:complexType name="GetUserRequest">
         <xs:sequence>
           <xs:element name="userId" type="xs:string"/>
@@ -120,6 +140,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="GetUserResponse" type="tns:GetUserResponse"/>
       <xs:complexType name="GetUserResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -130,6 +151,7 @@
         </xs:complexContent>
       </xs:complexType>
 
+      <xs:element name="UpdateUserRequest" type="tns:UpdateUserRequest"/>
       <xs:complexType name="UpdateUserRequest">
         <xs:sequence>
           <xs:element name="userId" type="xs:string"/>
@@ -140,14 +162,34 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="DeleteUserRequest" type="tns:DeleteUserRequest"/>
       <xs:complexType name="DeleteUserRequest">
         <xs:sequence>
           <xs:element name="userId" type="xs:string"/>
           <xs:element name="token" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
+      
+      <xs:element name="ListUsersRequest" type="tns:ListUsersRequest"/>
+      <xs:complexType name="ListUsersRequest">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="ListUsersResponse" type="tns:ListUsersResponse"/>
+      <xs:complexType name="ListUsersResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="users" type="tns:User" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
 
       <!-- Form Request/Response Types -->
+      <xs:element name="CreateFormRequest" type="tns:CreateFormRequest"/>
       <xs:complexType name="CreateFormRequest">
         <xs:sequence>
           <xs:element name="token" type="xs:string"/>
@@ -156,6 +198,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="CreateFormResponse" type="tns:CreateFormResponse"/>
       <xs:complexType name="CreateFormResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -166,6 +209,7 @@
         </xs:complexContent>
       </xs:complexType>
 
+      <xs:element name="GetFormRequest" type="tns:GetFormRequest"/>
       <xs:complexType name="GetFormRequest">
         <xs:sequence>
           <xs:element name="formId" type="xs:string"/>
@@ -173,6 +217,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="GetFormResponse" type="tns:GetFormResponse"/>
       <xs:complexType name="GetFormResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -184,12 +229,14 @@
         </xs:complexContent>
       </xs:complexType>
 
+      <xs:element name="ListFormsRequest" type="tns:ListFormsRequest"/>
       <xs:complexType name="ListFormsRequest">
         <xs:sequence>
           <xs:element name="token" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="ListFormsResponse" type="tns:ListFormsResponse"/>
       <xs:complexType name="ListFormsResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -199,8 +246,28 @@
           </xs:extension>
         </xs:complexContent>
       </xs:complexType>
+      
+      <xs:element name="UpdateFormRequest" type="tns:UpdateFormRequest"/>
+      <xs:complexType name="UpdateFormRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="title" type="xs:string" minOccurs="0"/>
+          <xs:element name="description" type="xs:string" minOccurs="0"/>
+          <xs:element name="isPublished" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="DeleteFormRequest" type="tns:DeleteFormRequest"/>
+      <xs:complexType name="DeleteFormRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
 
       <!-- Question Request/Response Types -->
+      <xs:element name="AddQuestionRequest" type="tns:AddQuestionRequest"/>
       <xs:complexType name="AddQuestionRequest">
         <xs:sequence>
           <xs:element name="token" type="xs:string"/>
@@ -212,6 +279,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="AddQuestionResponse" type="tns:AddQuestionResponse"/>
       <xs:complexType name="AddQuestionResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -221,8 +289,71 @@
           </xs:extension>
         </xs:complexContent>
       </xs:complexType>
+      
+      <xs:element name="GetQuestionRequest" type="tns:GetQuestionRequest"/>
+      <xs:complexType name="GetQuestionRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="questionId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="GetQuestionResponse" type="tns:GetQuestionResponse"/>
+      <xs:complexType name="GetQuestionResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="question" type="tns:Question"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      
+      <xs:element name="UpdateQuestionRequest" type="tns:UpdateQuestionRequest"/>
+      <xs:complexType name="UpdateQuestionRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="questionId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="title" type="xs:string" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
+          <xs:element name="required" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="options" type="xs:string" minOccurs="0"/>
+          <xs:element name="order" type="xs:int" minOccurs="0"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="DeleteQuestionRequest" type="tns:DeleteQuestionRequest"/>
+      <xs:complexType name="DeleteQuestionRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="questionId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="ListQuestionsRequest" type="tns:ListQuestionsRequest"/>
+      <xs:complexType name="ListQuestionsRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="ListQuestionsResponse" type="tns:ListQuestionsResponse"/>
+      <xs:complexType name="ListQuestionsResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="questions" type="tns:Question" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
 
       <!-- Response Request/Response Types -->
+      <xs:element name="SubmitResponseRequest" type="tns:SubmitResponseRequest"/>
       <xs:complexType name="SubmitResponseRequest">
         <xs:sequence>
           <xs:element name="formId" type="xs:string"/>
@@ -231,6 +362,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="SubmitResponseResponse" type="tns:SubmitResponseResponse"/>
       <xs:complexType name="SubmitResponseResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -241,6 +373,7 @@
         </xs:complexContent>
       </xs:complexType>
 
+      <xs:element name="ListResponsesRequest" type="tns:ListResponsesRequest"/>
       <xs:complexType name="ListResponsesRequest">
         <xs:sequence>
           <xs:element name="formId" type="xs:string"/>
@@ -248,6 +381,7 @@
         </xs:sequence>
       </xs:complexType>
 
+      <xs:element name="ListResponsesResponse" type="tns:ListResponsesResponse"/>
       <xs:complexType name="ListResponsesResponse">
         <xs:complexContent>
           <xs:extension base="tns:BaseResponse">
@@ -256,6 +390,45 @@
             </xs:sequence>
           </xs:extension>
         </xs:complexContent>
+      </xs:complexType>
+      
+      <xs:element name="GetResponseRequest" type="tns:GetResponseRequest"/>
+      <xs:complexType name="GetResponseRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="responseId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="GetResponseResponse" type="tns:GetResponseResponse"/>
+      <xs:complexType name="GetResponseResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="response" type="tns:Response"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      
+      <xs:element name="UpdateResponseRequest" type="tns:UpdateResponseRequest"/>
+      <xs:complexType name="UpdateResponseRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="responseId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="answers" type="tns:Answer" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="DeleteResponseRequest" type="tns:DeleteResponseRequest"/>
+      <xs:complexType name="DeleteResponseRequest">
+        <xs:sequence>
+          <xs:element name="formId" type="xs:string"/>
+          <xs:element name="responseId" type="xs:string"/>
+          <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
       </xs:complexType>
     </xs:schema>
   </wsdl:types>
@@ -269,7 +442,7 @@
     <wsdl:part name="parameters" element="tns:LoginResponse"/>
   </wsdl:message>
   <wsdl:message name="logoutUserRequest">
-    <wsdl:part name="token" element="xs:string"/>
+    <wsdl:part name="parameters" element="tns:LogoutRequest"/>
   </wsdl:message>
   <wsdl:message name="logoutUserResponse">
     <wsdl:part name="parameters" element="tns:BaseResponse"/>
@@ -300,6 +473,12 @@
   <wsdl:message name="deleteUserResponse">
     <wsdl:part name="parameters" element="tns:BaseResponse"/>
   </wsdl:message>
+  <wsdl:message name="listUsersRequest">
+    <wsdl:part name="parameters" element="tns:ListUsersRequest"/>
+  </wsdl:message>
+  <wsdl:message name="listUsersResponse">
+    <wsdl:part name="parameters" element="tns:ListUsersResponse"/>
+  </wsdl:message>
 
   <!-- Form Messages -->
   <wsdl:message name="createFormRequest">
@@ -320,6 +499,18 @@
   <wsdl:message name="listFormsResponse">
     <wsdl:part name="parameters" element="tns:ListFormsResponse"/>
   </wsdl:message>
+  <wsdl:message name="updateFormRequest">
+    <wsdl:part name="parameters" element="tns:UpdateFormRequest"/>
+  </wsdl:message>
+  <wsdl:message name="updateFormResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteFormRequest">
+    <wsdl:part name="parameters" element="tns:DeleteFormRequest"/>
+  </wsdl:message>
+  <wsdl:message name="deleteFormResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
 
   <!-- Question Messages -->
   <wsdl:message name="addQuestionRequest">
@@ -327,6 +518,30 @@
   </wsdl:message>
   <wsdl:message name="addQuestionResponse">
     <wsdl:part name="parameters" element="tns:AddQuestionResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getQuestionRequest">
+    <wsdl:part name="parameters" element="tns:GetQuestionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getQuestionResponse">
+    <wsdl:part name="parameters" element="tns:GetQuestionResponse"/>
+  </wsdl:message>
+  <wsdl:message name="updateQuestionRequest">
+    <wsdl:part name="parameters" element="tns:UpdateQuestionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="updateQuestionResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteQuestionRequest">
+    <wsdl:part name="parameters" element="tns:DeleteQuestionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="deleteQuestionResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="listQuestionsRequest">
+    <wsdl:part name="parameters" element="tns:ListQuestionsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="listQuestionsResponse">
+    <wsdl:part name="parameters" element="tns:ListQuestionsResponse"/>
   </wsdl:message>
 
   <!-- Response Messages -->
@@ -341,6 +556,24 @@
   </wsdl:message>
   <wsdl:message name="listResponsesResponse">
     <wsdl:part name="parameters" element="tns:ListResponsesResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getResponseRequest">
+    <wsdl:part name="parameters" element="tns:GetResponseRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getResponseResponse">
+    <wsdl:part name="parameters" element="tns:GetResponseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="updateResponseRequest">
+    <wsdl:part name="parameters" element="tns:UpdateResponseRequest"/>
+  </wsdl:message>
+  <wsdl:message name="updateResponseResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteResponseRequest">
+    <wsdl:part name="parameters" element="tns:DeleteResponseRequest"/>
+  </wsdl:message>
+  <wsdl:message name="deleteResponseResponse">
+    <wsdl:part name="parameters" element="tns:BaseResponse"/>
   </wsdl:message>
 
   <!-- Port Types -->
@@ -372,6 +605,10 @@
       <wsdl:input message="tns:deleteUserRequest"/>
       <wsdl:output message="tns:deleteUserResponse"/>
     </wsdl:operation>
+    <wsdl:operation name="listUsers">
+      <wsdl:input message="tns:listUsersRequest"/>
+      <wsdl:output message="tns:listUsersResponse"/>
+    </wsdl:operation>
 
     <!-- Form Operations -->
     <wsdl:operation name="createForm">
@@ -386,11 +623,35 @@
       <wsdl:input message="tns:listFormsRequest"/>
       <wsdl:output message="tns:listFormsResponse"/>
     </wsdl:operation>
+    <wsdl:operation name="updateForm">
+      <wsdl:input message="tns:updateFormRequest"/>
+      <wsdl:output message="tns:updateFormResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteForm">
+      <wsdl:input message="tns:deleteFormRequest"/>
+      <wsdl:output message="tns:deleteFormResponse"/>
+    </wsdl:operation>
 
     <!-- Question Operations -->
     <wsdl:operation name="addQuestion">
       <wsdl:input message="tns:addQuestionRequest"/>
       <wsdl:output message="tns:addQuestionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getQuestion">
+      <wsdl:input message="tns:getQuestionRequest"/>
+      <wsdl:output message="tns:getQuestionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateQuestion">
+      <wsdl:input message="tns:updateQuestionRequest"/>
+      <wsdl:output message="tns:updateQuestionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteQuestion">
+      <wsdl:input message="tns:deleteQuestionRequest"/>
+      <wsdl:output message="tns:deleteQuestionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="listQuestions">
+      <wsdl:input message="tns:listQuestionsRequest"/>
+      <wsdl:output message="tns:listQuestionsResponse"/>
     </wsdl:operation>
 
     <!-- Response Operations -->
@@ -401,6 +662,18 @@
     <wsdl:operation name="listResponses">
       <wsdl:input message="tns:listResponsesRequest"/>
       <wsdl:output message="tns:listResponsesResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getResponse">
+      <wsdl:input message="tns:getResponseRequest"/>
+      <wsdl:output message="tns:getResponseResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateResponse">
+      <wsdl:input message="tns:updateResponseRequest"/>
+      <wsdl:output message="tns:updateResponseResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteResponse">
+      <wsdl:input message="tns:deleteResponseRequest"/>
+      <wsdl:output message="tns:deleteResponseResponse"/>
     </wsdl:operation>
   </wsdl:portType>
 
@@ -465,6 +738,15 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="listUsers">
+      <soap:operation soapAction="http://formsclone.service/listUsers"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
 
     <!-- Form Bindings -->
     <wsdl:operation name="createForm">
@@ -494,10 +776,64 @@
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="updateForm">
+      <soap:operation soapAction="http://formsclone.service/updateForm"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteForm">
+      <soap:operation soapAction="http://formsclone.service/deleteForm"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
 
     <!-- Question Bindings -->
     <wsdl:operation name="addQuestion">
       <soap:operation soapAction="http://formsclone.service/addQuestion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getQuestion">
+      <soap:operation soapAction="http://formsclone.service/getQuestion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateQuestion">
+      <soap:operation soapAction="http://formsclone.service/updateQuestion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteQuestion">
+      <soap:operation soapAction="http://formsclone.service/deleteQuestion"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listQuestions">
+      <soap:operation soapAction="http://formsclone.service/listQuestions"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -518,6 +854,33 @@
     </wsdl:operation>
     <wsdl:operation name="listResponses">
       <soap:operation soapAction="http://formsclone.service/listResponses"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getResponse">
+      <soap:operation soapAction="http://formsclone.service/getResponse"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateResponse">
+      <soap:operation soapAction="http://formsclone.service/updateResponse"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteResponse">
+      <soap:operation soapAction="http://formsclone.service/deleteResponse"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>

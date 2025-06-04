@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  targetNamespace="http://formsclone.service/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://formsclone.service/"
+  elementFormDefault="qualified">
+  
+  <!-- Common Types -->
+  <xs:element name="BaseResponse" type="tns:BaseResponse"/>
+  <xs:complexType name="BaseResponse">
+    <xs:sequence>
+      <xs:element name="success" type="xs:boolean"/>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+      <xs:element name="errorCode" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- User Types -->
+  <xs:element name="User" type="tns:User"/>
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+      <xs:element name="email" type="xs:string"/>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="role" type="xs:string"/>
+      <xs:element name="createdAt" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Form Types -->
+  <xs:element name="Form" type="tns:Form"/>
+  <xs:complexType name="Form">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="userId" type="xs:string"/>
+      <xs:element name="isPublished" type="xs:boolean"/>
+      <xs:element name="createdAt" type="xs:dateTime"/>
+      <xs:element name="updatedAt" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Question Types -->
+  <xs:element name="Question" type="tns:Question"/>
+  <xs:complexType name="Question">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="text" type="xs:string"/>
+      <xs:element name="type" type="xs:string"/>
+      <xs:element name="required" type="xs:boolean"/>
+      <xs:element name="options" type="xs:string" minOccurs="0"/>
+      <xs:element name="order" type="xs:int"/>
+      <xs:element name="createdAt" type="xs:dateTime"/>
+      <xs:element name="updatedAt" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Response Types -->
+  <xs:element name="Response" type="tns:Response"/>
+  <xs:complexType name="Response">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string"/>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="userId" type="xs:string" minOccurs="0"/>
+      <xs:element name="answers" type="tns:Answer" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="submittedAt" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Answer" type="tns:Answer"/>
+  <xs:complexType name="Answer">
+    <xs:sequence>
+      <xs:element name="questionId" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Authentication Types -->
+  <xs:element name="LoginRequest" type="tns:LoginRequest"/>
+  <xs:complexType name="LoginRequest">
+    <xs:sequence>
+      <xs:element name="email" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="LoginResponse" type="tns:LoginResponse"/>
+  <xs:complexType name="LoginResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="token" type="xs:string"/>
+          <xs:element name="userId" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="LogoutRequest" type="tns:LogoutRequest"/>
+  <xs:complexType name="LogoutRequest">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- User Request/Response Types -->
+  <xs:element name="CreateUserRequest" type="tns:CreateUserRequest"/>
+  <xs:complexType name="CreateUserRequest">
+    <xs:sequence>
+      <xs:element name="email" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+      <xs:element name="name" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="CreateUserResponse" type="tns:CreateUserResponse"/>
+  <xs:complexType name="CreateUserResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="user" type="tns:User"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="GetUserRequest" type="tns:GetUserRequest"/>
+  <xs:complexType name="GetUserRequest">
+    <xs:sequence>
+      <xs:element name="userId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="GetUserResponse" type="tns:GetUserResponse"/>
+  <xs:complexType name="GetUserResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="user" type="tns:User"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="UpdateUserRequest" type="tns:UpdateUserRequest"/>
+  <xs:complexType name="UpdateUserRequest">
+    <xs:sequence>
+      <xs:element name="userId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="email" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="DeleteUserRequest" type="tns:DeleteUserRequest"/>
+  <xs:complexType name="DeleteUserRequest">
+    <xs:sequence>
+      <xs:element name="userId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="ListUsersRequest" type="tns:ListUsersRequest"/>
+  <xs:complexType name="ListUsersRequest">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="ListUsersResponse" type="tns:ListUsersResponse"/>
+  <xs:complexType name="ListUsersResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="users" type="tns:User" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Form Request/Response Types -->
+  <xs:element name="CreateFormRequest" type="tns:CreateFormRequest"/>
+  <xs:complexType name="CreateFormRequest">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="CreateFormResponse" type="tns:CreateFormResponse"/>
+  <xs:complexType name="CreateFormResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="form" type="tns:Form"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="GetFormRequest" type="tns:GetFormRequest"/>
+  <xs:complexType name="GetFormRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="GetFormResponse" type="tns:GetFormResponse"/>
+  <xs:complexType name="GetFormResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="form" type="tns:Form"/>
+          <xs:element name="questions" type="tns:Question" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="ListFormsRequest" type="tns:ListFormsRequest"/>
+  <xs:complexType name="ListFormsRequest">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ListFormsResponse" type="tns:ListFormsResponse"/>
+  <xs:complexType name="ListFormsResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="forms" type="tns:Form" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="UpdateFormRequest" type="tns:UpdateFormRequest"/>
+  <xs:complexType name="UpdateFormRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="title" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="isPublished" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="DeleteFormRequest" type="tns:DeleteFormRequest"/>
+  <xs:complexType name="DeleteFormRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Question Request/Response Types -->
+  <xs:element name="AddQuestionRequest" type="tns:AddQuestionRequest"/>
+  <xs:complexType name="AddQuestionRequest">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="title" type="xs:string"/>
+      <xs:element name="type" type="xs:string"/>
+      <xs:element name="required" type="xs:boolean"/>
+      <xs:element name="options" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="AddQuestionResponse" type="tns:AddQuestionResponse"/>
+  <xs:complexType name="AddQuestionResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="question" type="tns:Question"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="GetQuestionRequest" type="tns:GetQuestionRequest"/>
+  <xs:complexType name="GetQuestionRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="questionId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="GetQuestionResponse" type="tns:GetQuestionResponse"/>
+  <xs:complexType name="GetQuestionResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="question" type="tns:Question"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="UpdateQuestionRequest" type="tns:UpdateQuestionRequest"/>
+  <xs:complexType name="UpdateQuestionRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="questionId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="title" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+      <xs:element name="required" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="options" type="xs:string" minOccurs="0"/>
+      <xs:element name="order" type="xs:int" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="DeleteQuestionRequest" type="tns:DeleteQuestionRequest"/>
+  <xs:complexType name="DeleteQuestionRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="questionId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="ListQuestionsRequest" type="tns:ListQuestionsRequest"/>
+  <xs:complexType name="ListQuestionsRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="ListQuestionsResponse" type="tns:ListQuestionsResponse"/>
+  <xs:complexType name="ListQuestionsResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="questions" type="tns:Question" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Response Request/Response Types -->
+  <xs:element name="SubmitResponseRequest" type="tns:SubmitResponseRequest"/>
+  <xs:complexType name="SubmitResponseRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string" minOccurs="0"/>
+      <xs:element name="answers" type="tns:Answer" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="SubmitResponseResponse" type="tns:SubmitResponseResponse"/>
+  <xs:complexType name="SubmitResponseResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="responseId" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="ListResponsesRequest" type="tns:ListResponsesRequest"/>
+  <xs:complexType name="ListResponsesRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ListResponsesResponse" type="tns:ListResponsesResponse"/>
+  <xs:complexType name="ListResponsesResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="responses" type="tns:Response" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="GetResponseRequest" type="tns:GetResponseRequest"/>
+  <xs:complexType name="GetResponseRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="responseId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="GetResponseResponse" type="tns:GetResponseResponse"/>
+  <xs:complexType name="GetResponseResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseResponse">
+        <xs:sequence>
+          <xs:element name="response" type="tns:Response"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:element name="UpdateResponseRequest" type="tns:UpdateResponseRequest"/>
+  <xs:complexType name="UpdateResponseRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="responseId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+      <xs:element name="answers" type="tns:Answer" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="DeleteResponseRequest" type="tns:DeleteResponseRequest"/>
+  <xs:complexType name="DeleteResponseRequest">
+    <xs:sequence>
+      <xs:element name="formId" type="xs:string"/>
+      <xs:element name="responseId" type="xs:string"/>
+      <xs:element name="token" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

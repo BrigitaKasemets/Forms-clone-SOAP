@@ -1,8 +1,3 @@
-/**
- * Forms-Clone SOAP API Server
- * Main server file for the SOAP version of the Forms-Clone API
- */
-
 const express = require('express');
 const soap = require('soap');
 const fs = require('fs');
@@ -16,6 +11,9 @@ dotenv.config({ path: path.join(__dirname, 'config', '.env') });
 // Import services
 const sessionService = require('./services/sessionService');
 const userService = require('./services/userService');
+const formService = require('./services/formService');
+const questionService = require('./services/questionService');
+const responseService = require('./services/responseService');
 
 // Create Express app
 const app = express();
@@ -115,50 +113,205 @@ const serviceObject = {
         }
       },
       
-      // Form operations - to be implemented
+      // Form operations
       createForm: async function(args) {
         console.log('createForm called with args:', args);
-        // Placeholder implementation
-        return {
-          success: true,
-          form: {
-            id: '1',
-            title: args.title,
-            description: args.description || '',
-            userId: '1',
-            isPublished: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-        };
+        try {
+          return await formService.createForm(args);
+        } catch (error) {
+          console.error('Error in createForm operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      getForm: async function(args) {
+        console.log('getForm called with args:', args);
+        try {
+          return await formService.getForm(args);
+        } catch (error) {
+          console.error('Error in getForm operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      listForms: async function(args) {
+        console.log('listForms called with args:', args);
+        try {
+          return await formService.listForms(args);
+        } catch (error) {
+          console.error('Error in listForms operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      updateForm: async function(args) {
+        console.log('updateForm called with args:', args);
+        try {
+          return await formService.updateForm(args);
+        } catch (error) {
+          console.error('Error in updateForm operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      deleteForm: async function(args) {
+        console.log('deleteForm called with args:', args);
+        try {
+          return await formService.deleteForm(args);
+        } catch (error) {
+          console.error('Error in deleteForm operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
       },
       
-      // Question operations - to be implemented
+      // Question operations
       addQuestion: async function(args) {
         console.log('addQuestion called with args:', args);
-        // Placeholder implementation
-        return {
-          success: true,
-          question: {
-            id: '1',
-            formId: args.formId,
-            title: args.title,
-            type: args.type,
-            required: args.required,
-            options: args.options || '',
-            order: 1
-          }
-        };
+        try {
+          return await questionService.addQuestion(args);
+        } catch (error) {
+          console.error('Error in addQuestion operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      getQuestion: async function(args) {
+        console.log('getQuestion called with args:', args);
+        try {
+          return await questionService.getQuestion(args);
+        } catch (error) {
+          console.error('Error in getQuestion operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      updateQuestion: async function(args) {
+        console.log('updateQuestion called with args:', args);
+        try {
+          return await questionService.updateQuestion(args);
+        } catch (error) {
+          console.error('Error in updateQuestion operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      deleteQuestion: async function(args) {
+        console.log('deleteQuestion called with args:', args);
+        try {
+          return await questionService.deleteQuestion(args);
+        } catch (error) {
+          console.error('Error in deleteQuestion operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      listQuestions: async function(args) {
+        console.log('listQuestions called with args:', args);
+        try {
+          return await questionService.listQuestions(args);
+        } catch (error) {
+          console.error('Error in listQuestions operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
       },
       
-      // Response operations - to be implemented
+      // Response operations
       submitResponse: async function(args) {
         console.log('submitResponse called with args:', args);
-        // Placeholder implementation
-        return {
-          success: true,
-          responseId: '1'
-        };
+        try {
+          return await responseService.submitResponse(args);
+        } catch (error) {
+          console.error('Error in submitResponse operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      listResponses: async function(args) {
+        console.log('listResponses called with args:', args);
+        try {
+          return await responseService.listResponses(args);
+        } catch (error) {
+          console.error('Error in listResponses operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      getResponse: async function(args) {
+        console.log('getResponse called with args:', args);
+        try {
+          return await responseService.getResponse(args);
+        } catch (error) {
+          console.error('Error in getResponse operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      updateResponse: async function(args) {
+        console.log('updateResponse called with args:', args);
+        try {
+          return await responseService.updateResponse(args);
+        } catch (error) {
+          console.error('Error in updateResponse operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
+      deleteResponse: async function(args) {
+        console.log('deleteResponse called with args:', args);
+        try {
+          return await responseService.deleteResponse(args);
+        } catch (error) {
+          console.error('Error in deleteResponse operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
       }
     }
   }
