@@ -112,6 +112,19 @@ const serviceObject = {
           };
         }
       },
+      listUsers: async function(args) {
+        console.log('listUsers called with args:', args);
+        try {
+          return await userService.listUsers(args);
+        } catch (error) {
+          console.error('Error in listUsers operation:', error);
+          return {
+            success: false,
+            message: 'Internal server error',
+            errorCode: 'SERVER_ERROR'
+          };
+        }
+      },
       
       // Form operations
       createForm: async function(args) {

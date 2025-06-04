@@ -202,6 +202,26 @@ class User {
       throw error;
     }
   }
+
+  /**
+   * Find all users with pagination
+   * 
+   * @param {number} [page=1] - Page number
+   * @param {number} [pageSize=10] - Number of users per page
+   * @returns {Promise<Array>} Array of user objects
+   */
+  static async findAll(page = 1, pageSize = 10) {
+    try {
+      const offset = (page - 1) * pageSize;
+      const users = await allAsync(
+        'SELECT id, email, name, role, created_at FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?',
+        [pageSize, offset]
+      );
+      return users;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = User;

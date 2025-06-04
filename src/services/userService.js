@@ -217,6 +217,52 @@ const userService = {
         errorCode: 'DELETE_USER_FAILED'
       };
     }
+  },
+
+  /**
+   * List all users
+   * 
+   * @param {Object} args - The SOAP request arguments
+   * @param {string} args.token - JWT token
+   * @returns {Promise<Object>} Users list response
+   */
+  listUsers: async (args) => {
+    try {
+      // Validate required fields
+      if (!args.token) {
+        return {
+          success: false,
+          message: 'Token is required',
+          errorCode: 'MISSING_FIELDS'
+        };
+      }
+
+      // Verify token
+      const authenticatedUser = await verifyToken(args.token);
+
+      // Get all users
+      const users = await User.findAll();
+
+      // Format users for XML
+      const formattedUsers = users.map(user => ({
+        ...user,
+        id: user.id.toString(),
+        createdAt: new Date(user.created_at).toISOString()
+      }));
+
+      return {
+        success: true,
+        users: formattedUsers
+      };
+    } catch (error) {
+      console.error('List users error:', error);
+      
+      return {
+        success: false,
+        message: error.message || 'Failed to list users',
+        errorCode: 'LIST_USERS_FAILED'
+      };
+    }
   }
 };
 

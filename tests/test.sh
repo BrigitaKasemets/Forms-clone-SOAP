@@ -47,7 +47,7 @@ LOGIN_RESPONSE=$(curl -s -X POST -H "Content-Type: text/xml" -d "${LOGIN_REQUEST
 echo "Login response received."
 
 # Extract token from login response
-TOKEN=$(echo ${LOGIN_RESPONSE} | grep -oPm1 "(?<=<token>)[^<]+")
+TOKEN=$(echo ${LOGIN_RESPONSE} | sed -n 's/.*<token>\([^<]*\)<\/token>.*/\1/p')
 if [ -z "${TOKEN}" ]; then
     echo "Error: Failed to get token from login response."
     echo "Response: ${LOGIN_RESPONSE}"
@@ -58,11 +58,14 @@ echo
 
 # Test create user operation
 echo "Testing createUser operation..."
+# Generate unique email using timestamp
+TIMESTAMP=$(date +%s)
+UNIQUE_EMAIL="test${TIMESTAMP}@example.com"
 CREATE_USER_REQUEST='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://formsclone.service/">
    <soapenv:Header/>
    <soapenv:Body>
       <ser:CreateUserRequest>
-         <ser:email>test@example.com</ser:email>
+         <ser:email>'${UNIQUE_EMAIL}'</ser:email>
          <ser:password>password123</ser:password>
          <ser:name>Test User</ser:name>
       </ser:CreateUserRequest>
@@ -73,7 +76,7 @@ CREATE_USER_RESPONSE=$(curl -s -X POST -H "Content-Type: text/xml" -d "${CREATE_
 echo "Create user response received."
 
 # Extract user ID from create user response
-USER_ID=$(echo ${CREATE_USER_RESPONSE} | grep -oPm1 "(?<=<id>)[^<]+")
+USER_ID=$(echo ${CREATE_USER_RESPONSE} | sed -n 's/.*<id>\([^<]*\)<\/id>.*/\1/p')
 if [ -z "${USER_ID}" ]; then
     echo "Error: Failed to get user ID from create user response."
     echo "Response: ${CREATE_USER_RESPONSE}"

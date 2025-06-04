@@ -422,6 +422,17 @@
         </xs:sequence>
       </xs:complexType>
       
+      <xs:element name="UpdateResponseResponse" type="tns:UpdateResponseResponse"/>
+      <xs:complexType name="UpdateResponseResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse">
+            <xs:sequence>
+              <xs:element name="response" type="tns:Response" minOccurs="0"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      
       <xs:element name="DeleteResponseRequest" type="tns:DeleteResponseRequest"/>
       <xs:complexType name="DeleteResponseRequest">
         <xs:sequence>
@@ -429,6 +440,13 @@
           <xs:element name="responseId" type="xs:string"/>
           <xs:element name="token" type="xs:string"/>
         </xs:sequence>
+      </xs:complexType>
+      
+      <xs:element name="DeleteResponseResponse" type="tns:DeleteResponseResponse"/>
+      <xs:complexType name="DeleteResponseResponse">
+        <xs:complexContent>
+          <xs:extension base="tns:BaseResponse"/>
+        </xs:complexContent>
       </xs:complexType>
     </xs:schema>
   </wsdl:types>

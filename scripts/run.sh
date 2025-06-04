@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Run script for Forms-Clone SOAP API
-# This script starts the SOAP server
+# Run script for Forms-Clone API
+# This script starts both the SOAP and REST API servers
 
 # Check if node is installed
 if ! command -v node &> /dev/null; then
@@ -19,18 +19,46 @@ fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR/.."
 
-# Check if .env file exists, if not create it from template
+# Check if .env file exists for SOAP API, if not create it from template
 if [ ! -f "./src/config/.env" ]; then
-    echo "Creating .env file from template..."
+    echo "Creating SOAP API .env file from template..."
     cp "./src/config/.env.example" "./src/config/.env"
-    echo "Created .env file. Please review and update it if necessary."
+    
+    # Generate a secure JWT secret and update .env file
+    JWT_SECRET=$(openssl rand -base64 32)
+    sed -i '' "s/your_jwt_secret_key_here/$JWT_SECRET/g" "./src/config/.env"
+    
+    echo "Created SOAP API .env file with secure JWT secret."
 fi
 
-# Install dependencies if needed
+# Check if .env file exists for REST API, if not create it from template
+if [ -d "./forms-clone-api" ]; then
+    if [ ! -f "./forms-clone-api/.env" ] && [ -f "./forms-clone-api/.env.example" ]; then
+        echo "Creating REST API .env file from template..."
+        cp "./forms-clone-api/.env.example" "./forms-clone-api/.env"
+        
+        # Generate a secure JWT secret and update .env file
+        JWT_SECRET=$(openssl rand -base64 32)
+        sed -i '' "s/your_strong_jwt_secret_here/$JWT_SECRET/g" "./forms-clone-api/.env"
+        
+        echo "Created REST API .env file with secure JWT secret."
+    fi
+fi
+
+# Install dependencies for SOAP API if needed
 if [ ! -d "node_modules" ]; then
-    echo "Installing dependencies..."
+    echo "Installing SOAP API dependencies..."
     npm install
-    echo "Dependencies installed."
+    echo "SOAP API dependencies installed."
+fi
+
+# Install dependencies for REST API if needed
+if [ -d "forms-clone-api" ] && [ ! -d "forms-clone-api/node_modules" ]; then
+    echo "Installing REST API dependencies..."
+    cd forms-clone-api
+    npm install
+    cd ..
+    echo "REST API dependencies installed."
 fi
 
 # Check if database is initialized
@@ -41,6 +69,25 @@ if [ ! -f "./data/forms.db" ]; then
     echo "Database initialized."
 fi
 
-# Start the server
-echo "Starting Forms-Clone SOAP server..."
+# Start both servers in background
+echo "Starting Forms-Clone SOAP and REST API servers..."
+
+# Start REST API in background
+if [ -d "forms-clone-api" ]; then
+    echo "Starting REST API server..."
+    cd forms-clone-api
+    npm run dev &
+    REST_PID=$!
+    cd ..
+    echo "REST API server started with PID: $REST_PID"
+fi
+
+# Start SOAP API
+echo "Starting SOAP API server..."
 npm run dev
+
+# This will only execute if the SOAP server stops
+if [ -n "$REST_PID" ]; then
+    echo "Stopping REST API server..."
+    kill $REST_PID
+fi

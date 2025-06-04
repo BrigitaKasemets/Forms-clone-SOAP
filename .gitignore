@@ -21,6 +21,9 @@ data/
 logs/
 *.log
 
+# Test results
+tests/results/
+
 # Testing
 coverage/
 
@@ -31,6 +34,13 @@ build/
 # OS specific
 .DS_Store
 Thumbs.db
+*.tmp
+*.temp
+
+# Backup files
+*~
+*.bak
+*.orig
 
 # Editor folders
 .idea/
